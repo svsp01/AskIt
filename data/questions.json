@@ -1,0 +1,90 @@
+[
+  {
+    "id": "q1",
+    "title": "How does React's Virtual DOM work?",
+    "content": "I'm trying to understand the inner workings of React's Virtual DOM. Can someone explain how it optimizes rendering and why it's more efficient than directly manipulating the actual DOM?",
+    "authorId": "u1",
+    "tags": ["react", "javascript", "frontend", "performance"],
+    "createdAt": "2024-12-01T12:00:00Z",
+    "updatedAt": "2024-12-01T12:00:00Z",
+    "viewCount": 156,
+    "voteCount": 24
+  },
+  {
+    "id": "q2",
+    "title": "Best practices for designing a REST API",
+    "content": "I'm creating a new REST API for my web application and want to follow industry best practices. What are some recommended patterns for endpoint naming, versioning, error handling, and authentication?",
+    "authorId": "u2",
+    "tags": ["api", "rest", "backend", "design"],
+    "createdAt": "2024-12-03T09:30:00Z",
+    "updatedAt": "2024-12-03T09:30:00Z",
+    "viewCount": 89,
+    "voteCount": 15
+  },
+  {
+    "id": "q3",
+    "title": "Implementing dark mode with Tailwind CSS",
+    "content": "I'm working on adding dark mode to my Tailwind CSS project. What's the most efficient way to implement this? Should I use Tailwind's built-in dark mode feature or manage it myself with CSS variables?",
+    "authorId": "u3",
+    "tags": ["tailwindcss", "css", "darkmode", "frontend"],
+    "createdAt": "2024-12-05T14:15:00Z",
+    "updatedAt": "2024-12-05T14:15:00Z",
+    "viewCount": 122,
+    "voteCount": 18
+  },
+  {
+    "id": "q4",
+    "title": "How to set up CI/CD pipeline for a Node.js project?",
+    "content": "I have a Node.js application and I want to set up a continuous integration and deployment pipeline. What tools and services would you recommend? I've heard of GitHub Actions, CircleCI, and Jenkins, but I'm not sure which one to choose.",
+    "authorId": "u4",
+    "tags": ["node.js", "ci-cd", "devops", "github-actions"],
+    "createdAt": "2024-12-07T10:45:00Z",
+    "updatedAt": "2024-12-07T10:45:00Z",
+    "viewCount": 74,
+    "voteCount": 12
+  },
+  {
+    "id": "q5",
+    "title": "Optimizing PostgreSQL queries for large datasets",
+    "content": "I'm working with a PostgreSQL database that has grown significantly in size. Some of our queries are starting to slow down. What are some strategies for optimizing these queries? Are there specific indexes I should be using?",
+    "authorId": "u5",
+    "tags": ["postgresql", "database", "performance", "sql"],
+    "createdAt": "2024-12-10T16:20:00Z",
+    "updatedAt": "2024-12-10T16:20:00Z",
+    "viewCount": 63,
+    "voteCount": 10
+  },
+  {
+    "id": "q6",
+    "title": "Understanding TypeScript generics",
+    "content": "I'm fairly new to TypeScript and I'm struggling to understand generics. Can someone explain how they work with some practical examples? When should I use them and what problems do they solve?",
+    "authorId": "u1",
+    "tags": ["typescript", "javascript", "programming"],
+    "createdAt": "2024-12-12T08:30:00Z",
+    "updatedAt": "2024-12-12T08:30:00Z",
+    "viewCount": 42,
+    "voteCount": 8
+  },
+  {
+    "id": "q7",
+    "title": "How to implement authentication in Next.js?",
+    "content": "I'm building a Next.js application and need to implement user authentication. What are the best approaches? Should I use a third-party service like Auth0, or build something custom with JWT?",
+    "authorId": "u2",
+    "tags": ["next.js", "authentication", "react", "jwt"],
+    "createdAt": "2024-12-15T11:10:00Z",
+    "updatedAt": "2024-12-15T11:10:00Z",
+    "viewCount": 95,
+    "voteCount": 17
+  },
+  {
+    "id": "q8",
+    "title": "Comparing React state management solutions in 2025",
+    "content": "With so many state management solutions available for React (Redux, Zustand, Jotai, Recoil, etc.), I'm having trouble deciding which one to use for my new project. What are the pros and cons of each in 2025?",
+    "authorId": "u3",
+    "tags": ["react", "state-management", "redux", "zustand"],
+    "createdAt": "2024-12-18T13:45:00Z",
+    "updatedAt": "2024-12-18T13:45:00Z",
+    "viewCount": 138,
+    "voteCount": 22
+  }
+]

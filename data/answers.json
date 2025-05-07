@@ -1,0 +1,56 @@
+[
+  {
+    "id": "a1",
+    "questionId": "q1",
+    "content": "React's Virtual DOM works by creating a lightweight copy of the actual DOM in memory. When state changes occur, React first updates this virtual representation, then compares it with the previous version (a process called \"diffing\"). After identifying the differences, React updates only the changed parts in the real DOM, which is much more efficient than rewriting the entire DOM.\n\nThis approach is faster because DOM operations are expensive - they cause layout recalculations, repaints, and reflows. By minimizing these operations, React significantly improves performance.\n\nIn practice, it works like this:\n1. You change state in your component\n2. React creates a new Virtual DOM tree\n3. React compares the new tree with the previous one (diffing)\n4. React calculates the most efficient way to update the real DOM\n5. React applies only those specific changes to the actual DOM\n\nThis selective updating is why React is known for its performance, especially in complex UIs with frequent updates.",
+    "authorId": "u2",
+    "createdAt": "2024-12-01T14:30:00Z",
+    "isAccepted": true,
+    "voteCount": 15
+  },
+  {
+    "id": "a2",
+    "questionId": "q1",
+    "content": "To add to what has already been said, React's reconciliation algorithm (the process that determines what has changed) uses several optimizations to make the diffing process efficient:\n\n1. **Different component types produce different trees**: If a div changes to a span, React won't try to update it - it will remove the old one and build a new one.\n\n2. **Keys help React identify which elements have changed**: When rendering lists, keys tell React which elements are new, moved, or removed.\n\n3. **Batched updates**: React often batches multiple state updates into a single re-render for better performance.\n\nAlso worth noting is that in React 18, a new concurrent rendering feature was introduced that allows React to pause and resume rendering work, making the UI even more responsive by prioritizing high-priority updates.",
+    "authorId": "u3",
+    "createdAt": "2024-12-01T16:45:00Z",
+    "isAccepted": false,
+    "voteCount": 10
+  },
+  {
+    "id": "a3",
+    "questionId": "q2",
+    "content": "Here are some REST API best practices I've found helpful:\n\n**Naming and Structure:**\n- Use nouns, not verbs for endpoints (e.g., `/users` not `/getUsers`)\n- Use plural nouns for collections (`/users` not `/user`)\n- Use hierarchical relationships for nested resources (`/users/123/posts`)\n\n**Versioning:**\n- Include version in the URL path (`/v1/users`) or use an Accept header\n- Never release an API without versioning - you'll regret it later\n\n**Error Handling:**\n- Use standard HTTP status codes (200, 201, 400, 401, 403, 404, 500)\n- Return consistent error objects with a message and possibly a code\n- Include enough information to help fix the problem without exposing internals\n\n**Authentication:**\n- Use OAuth 2.0 or JWT for stateless authentication\n- HTTPS is non-negotiable\n- Rate limiting to prevent abuse\n\n**Other Considerations:**\n- Support filtering, sorting, and pagination for collections\n- Use HATEOAS to make your API self-documenting\n- Consider implementing caching via ETag headers\n- Document your API with OpenAPI/Swagger\n\nConsistency across your API is probably the most important principle. Pick patterns and stick with them.",
+    "authorId": "u4",
+    "createdAt": "2024-12-03T11:20:00Z",
+    "isAccepted": true,
+    "voteCount": 12
+  },
+  {
+    "id": "a4",
+    "questionId": "q3",
+    "content": "For implementing dark mode with Tailwind CSS, I recommend using Tailwind's built-in dark mode feature. It's specifically designed for this purpose and integrates seamlessly with the rest of the framework.\n\nHere's how to set it up:\n\n1. Configure `tailwind.config.js` to use the class strategy:\n```js\nmodule.exports = {\n  darkMode: 'class', // or 'media' if you prefer system settings\n  // ...\n}\n```\n\n2. Add the dark class to your HTML or body element when dark mode is active:\n```html\n<html class=\"dark\">\n```\n\n3. Use dark: variants in your components:\n```html\n<div class=\"bg-white text-black dark:bg-gray-800 dark:text-white\">\n  <!-- content -->\n</div>\n```\n\n4. For more complex themes, you can use CSS variables in your tailwind config:\n```js\nmodule.exports = {\n  theme: {\n    extend: {\n      colors: {\n        primary: 'var(--color-primary)',\n      }\n    }\n  }\n}\n```\n\nThen define these variables for both light and dark modes in your CSS:\n```css\n:root {\n  --color-primary: #0066ff;\n}\n\n.dark {\n  --color-primary: #4d9fff;\n}\n```\n\nFor toggling between modes, you can use JavaScript to add/remove the `dark` class and store the preference in localStorage. The `next-themes` package is excellent if you're using Next.js.",
+    "authorId": "u1",
+    "createdAt": "2024-12-05T15:40:00Z",
+    "isAccepted": true,
+    "voteCount": 14
+  },
+  {
+    "id": "a5",
+    "questionId": "q4",
+    "content": "For setting up CI/CD for a Node.js project, I'd recommend GitHub Actions if you're already using GitHub for your repository. It's tightly integrated with GitHub and has a generous free tier.\n\nHere's a simple workflow to get you started:\n\n1. Create a `.github/workflows/main.yml` file:\n\n```yaml\nname: Node.js CI/CD\n\non:\n  push:\n    branches: [ main ]\n  pull_request:\n    branches: [ main ]\n\njobs:\n  build-and-test:\n    runs-on: ubuntu-latest\n\n    steps:\n    - uses: actions/checkout@v3\n    - name: Use Node.js\n      uses: actions/setup-node@v3\n      with:\n        node-version: '18.x'\n        cache: 'npm'\n    - run: npm ci\n    - run: npm run build --if-present\n    - run: npm test\n\n  deploy:\n    needs: build-and-test\n    if: github.ref == 'refs/heads/main' && github.event_name == 'push'\n    runs-on: ubuntu-latest\n    \n    steps:\n    - uses: actions/checkout@v3\n    # Add deployment steps here, for example:\n    - name: Deploy to production\n      uses: some-deployment-action@v1\n      with:\n        # Add necessary parameters\n```\n\nFor deployment, you have several options:\n- For AWS, you can use AWS CodeDeploy or Elastic Beanstalk\n- For simple static sites, Netlify or Vercel\n- For containerized apps, you can push to a container registry and deploy to Kubernetes\n\nRegardless of which CI/CD tool you choose, aim to include these steps:\n1. Linting code\n2. Running unit and integration tests\n3. Building the application\n4. (Optional) Running security scans\n5. Deploying to staging for verification\n6. Deploying to production\n\nGitHub Actions is nicely balanced between simplicity and power, but CircleCI or Jenkins are good alternatives if you need more customization or have specific requirements.",
+    "authorId": "u5",
+    "createdAt": "2024-12-07T12:15:00Z",
+    "isAccepted": false,
+    "voteCount": 9
+  },
+  {
+    "id": "a6",
+    "questionId": "q5",
+    "content": "Optimizing PostgreSQL for large datasets involves several strategies:\n\n1. **Indexing**: The most important optimization. Add indexes to columns used in WHERE, JOIN and ORDER BY clauses:\n```sql\nCREATE INDEX idx_users_email ON users(email);\n```\nConsider composite indexes for queries that filter on multiple columns.\n\n2. **Query Optimization**:\n   - Use `EXPLAIN ANALYZE` to see execution plans\n   - Avoid SELECT * and only request needed columns\n   - Use appropriate JOIN types (INNER vs LEFT)\n   - Be careful with subqueries - sometimes JOINs are more efficient\n\n3. **Table Partitioning**: For very large tables, split into smaller ones based on ranges or list values:\n```sql\nCREATE TABLE measurements (\n  time_id timestamp,\n  device_id int,\n  temperature float\n) PARTITION BY RANGE (time_id);\n```\n\n4. **Regular Maintenance**:\n   - Run VACUUM regularly to reclaim space\n   - Run ANALYZE to update statistics\n   - Consider using `pg_stat_statements` to identify slow queries\n\n5. **Hardware/Config Optimizations**:\n   - Increase `shared_buffers` (typically 25% of system RAM)\n   - Adjust `work_mem` for complex operations\n   - Consider using SSDs for storage\n\n6. **Denormalization**: In some cases, calculated fields or redundant data can speed up queries at the cost of storage and write complexity.\n\nStart with examining your slow queries using `EXPLAIN ANALYZE`, identify bottlenecks, and address them with appropriate indexes. This often resolves 80% of performance issues with minimal effort.",
+    "authorId": "u2",
+    "createdAt": "2024-12-10T17:30:00Z",
+    "isAccepted": true,
+    "voteCount": 8
+  }
+]

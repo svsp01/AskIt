@@ -1,0 +1,47 @@
+[
+  {
+    "id": "u1",
+    "username": "alice",
+    "email": "alice@example.com",
+    "name": "Alice Johnson",
+    "bio": "Full-stack developer with 5 years of experience. I love React, Node.js, and building helpful applications.",
+    "createdAt": "2023-01-15T12:00:00Z",
+    "avatarUrl": "https://images.pexels.com/photos/3763188/pexels-photo-3763188.jpeg?auto=compress&cs=tinysrgb&w=150"
+  },
+  {
+    "id": "u2",
+    "username": "bob",
+    "email": "bob@example.com",
+    "name": "Bob Smith",
+    "bio": "AI researcher and Python enthusiast. Always learning and sharing knowledge.",
+    "createdAt": "2023-02-20T14:30:00Z",
+    "avatarUrl": "https://images.pexels.com/photos/2269872/pexels-photo-2269872.jpeg?auto=compress&cs=tinysrgb&w=150"
+  },
+  {
+    "id": "u3",
+    "username": "charlie",
+    "email": "charlie@example.com",
+    "name": "Charlie Garcia",
+    "bio": "Frontend developer specializing in UI/UX. I believe in creating intuitive and accessible experiences.",
+    "createdAt": "2023-03-10T09:15:00Z",
+    "avatarUrl": "https://images.pexels.com/photos/2726111/pexels-photo-2726111.jpeg?auto=compress&cs=tinysrgb&w=150"
+  },
+  {
+    "id": "u4",
+    "username": "dana",
+    "email": "dana@example.com",
+    "name": "Dana Lee",
+    "bio": "DevOps engineer and cloud architect. Ask me about AWS, Docker, and CI/CD pipelines.",
+    "createdAt": "2023-04-05T16:45:00Z",
+    "avatarUrl": "https://images.pexels.com/photos/1181686/pexels-photo-1181686.jpeg?auto=compress&cs=tinysrgb&w=150"
+  },
+  {
+    "id": "u5",
+    "username": "evan",
+    "email": "evan@example.com",
+    "name": "Evan Brown",
+    "bio": "Mobile app developer with expertise in React Native and Flutter. Creating engaging cross-platform experiences.",
+    "createdAt": "2023-05-12T11:20:00Z",
+    "avatarUrl": "https://images.pexels.com/photos/220453/pexels-photo-220453.jpeg?auto=compress&cs=tinysrgb&w=150"
+  }
+]
