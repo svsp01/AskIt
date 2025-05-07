@@ -1,14 +1,15 @@
-import { NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 import connectDB from '@/lib/mongodb';
 import Question from '@/models/Question';
 import { auth } from '@/lib/auth';
 
 export async function GET(
-  req: Request,
-  { params }: { params: { id: string } }
+  request: NextRequest,
+  context: { params: Promise<{ id: string }> }
 ) {
   try {
     await connectDB();
+    const params = await context.params;
     
     const question = await Question.findById(params.id)
       .populate('author', 'username name avatarUrl');
@@ -35,13 +36,14 @@ export async function GET(
 }
 
 export async function PUT(
-  req: Request,
-  { params }: { params: { id: string } }
+  request: NextRequest,
+  context: { params: Promise<{ id: string }> }
 ) {
   try {
     await connectDB();
+    const params = await context.params;
     
-    const user = await auth(req);
+    const user = await auth(request);
     if (!user) {
       return NextResponse.json(
         { error: 'Unauthorized' },
@@ -66,7 +68,7 @@ export async function PUT(
       );
     }
     
-    const { title, content, tags } = await req.json();
+    const { title, content, tags } = await request.json();
     
     question.title = title;
     question.content = content;
@@ -86,13 +88,14 @@ export async function PUT(
 }
 
 export async function DELETE(
-  req: Request,
-  { params }: { params: { id: string } }
+  request: NextRequest,
+  context: { params: Promise<{ id: string }> }
 ) {
   try {
     await connectDB();
+    const params = await context.params;
     
-    const user = await auth(req);
+    const user = await auth(request);
     if (!user) {
       return NextResponse.json(
         { error: 'Unauthorized' },

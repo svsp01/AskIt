@@ -1,13 +1,13 @@
-import { NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 import connectDB from '@/lib/mongodb';
 import Question from '@/models/Question';
 import { auth } from '@/lib/auth';
 
-export async function GET(req: Request) {
+export async function GET(request: NextRequest) {
   try {
     await connectDB();
     
-    const { searchParams } = new URL(req.url);
+    const { searchParams } = new URL(request.url);
     const limit = parseInt(searchParams.get('limit') || '10');
     const offset = parseInt(searchParams.get('offset') || '0');
     const tag = searchParams.get('tag');
@@ -35,7 +35,7 @@ export async function GET(req: Request) {
     
     const [questions, total] = await Promise.all([
       Question.find(query)
-        .sort(sortOptions)
+        .sort(sort === 'popular' ? { voteCount: -1 as const } : { createdAt: -1 as const })
         .skip(offset)
         .limit(limit)
         .populate('author', 'username name avatarUrl'),
@@ -55,11 +55,11 @@ export async function GET(req: Request) {
   }
 }
 
-export async function POST(req: Request) {
+export async function POST(request: NextRequest) {
   try {
     await connectDB();
     
-    const user = await auth(req);
+    const user = await auth(request);
     if (!user) {
       return NextResponse.json(
         { error: 'Unauthorized' },
@@ -67,7 +67,7 @@ export async function POST(req: Request) {
       );
     }
     
-    const { title, content, tags } = await req.json();
+    const { title, content, tags } = await request.json();
     
     const question = await Question.create({
       title,
