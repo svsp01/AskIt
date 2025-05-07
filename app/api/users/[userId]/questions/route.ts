@@ -1,11 +1,12 @@
 import Question from '@/models/Question';
-import { NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 
 export async function GET(
-  request: Request,
-  { params }: { params: { userId: string } }
+  request: NextRequest,
+  context: { params: Promise<{ userId: string }> }
 ) {
   try {
+    const params = await context.params;
     const questions = await Question.find({ author: params.userId })
       .populate('author')
       .sort({ createdAt: -1 });

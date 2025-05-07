@@ -14,6 +14,7 @@ import { useAuth } from '@/queries/useAuth';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { formatDistanceToNow } from 'date-fns';
 import { MessageSquare, ThumbsUp, Eye, ArrowLeft, Loader2 } from 'lucide-react';
+import { Answer } from '@/types/answer';
 
 export default function QuestionPage() {
   const { id } = useParams<{ id: string }>();
@@ -59,7 +60,7 @@ export default function QuestionPage() {
   
   // Get author initials for avatar fallback
   const authorInitials = question.author?.name
-    ? question.author.name.split(' ').map(n => n[0]).join('').toUpperCase().substring(0, 2)
+    ? question.author.name.split(' ').map((n:any) => n[0]).join('').toUpperCase().substring(0, 2)
     : question.author?.username.substring(0, 2).toUpperCase() || 'U';
   
   return (
@@ -80,7 +81,7 @@ export default function QuestionPage() {
           <h1 className="text-2xl md:text-3xl font-bold">{question.title}</h1>
           
           <div className="flex flex-wrap gap-2">
-            {question.tags.map(tag => (
+            {question.tags.map((tag:any) => (
               <Link href={`/search?tag=${tag}`} key={tag}>
                 <Badge variant="secondary" className="hover:bg-secondary/80 cursor-pointer">
                   {tag}
@@ -109,7 +110,7 @@ export default function QuestionPage() {
           <Separator />
           
           <div className="prose prose-sm dark:prose-invert max-w-none my-4">
-            {question.content.split('\n').map((paragraph, i) => (
+            {question.content.split('\n').map((paragraph:any, i:any) => (
               <p key={i}>{paragraph}</p>
             ))}
           </div>
@@ -150,9 +151,9 @@ export default function QuestionPage() {
           </div>
         ) : answers && answers.length > 0 ? (
           <div className="space-y-4">
-            {answers.map(answer => (
+            {answers.map((answer:Answer) => (
               <AnswerCard 
-                key={answer.id} 
+                key={answer._id} 
                 answer={answer} 
                 questionAuthorId={question.authorId}
               />

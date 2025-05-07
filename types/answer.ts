@@ -7,6 +7,7 @@ export interface Answer {
   };
   voteCount: number;
   isAccepted: boolean;
+  createdAt: string;
   author?: {
     id: string;
     username: string;

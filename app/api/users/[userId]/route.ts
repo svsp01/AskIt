@@ -1,17 +1,17 @@
 import connectDB from '@/lib/mongodb';
 import User from '@/models/User';
-import { NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 
 export async function GET(
-  request: Request,
-  { params }: { params: { userId: string } }
+  request: NextRequest,
+  context: { params: Promise<{ userId: string }> }
 ) {
   try {
-    const userId = params.userId;
+    const params = await context.params;
 
     await connectDB(); // ensure DB is connected
 
-    const user = await User.findById(userId);
+    const user = await User.findById(params.userId);
 
     if (!user) {
       return NextResponse.json({ error: 'User not found' }, { status: 404 });

@@ -23,12 +23,12 @@ export function AnswerCard({ answer, questionAuthorId }: AnswerCardProps) {
   const [isEditing, setIsEditing] = useState(false);
   const [editContent, setEditContent] = useState(answer.content);
   
-  const deleteAnswer = useDeleteAnswer(answer.questionId);
-  const updateAnswer = useUpdateAnswer(answer.id, answer.questionId);
-  const acceptAnswer = useAcceptAnswer(answer.questionId);
+  const deleteAnswer = useDeleteAnswer(answer.question._id);
+  const updateAnswer = useUpdateAnswer(answer._id, answer.question._id);
+  const acceptAnswer = useAcceptAnswer(answer.question._id);
   
-  const isAuthor = user?.id === answer.authorId;
-  const isQuestionAuthor = user?.id === questionAuthorId;
+  const isAuthor = user?._id === answer.author;
+  const isQuestionAuthor = user?._id === questionAuthorId;
   const canAccept = isQuestionAuthor && !answer.isAccepted;
   
   // Format date as relative time
@@ -42,7 +42,7 @@ export function AnswerCard({ answer, questionAuthorId }: AnswerCardProps) {
   const handleDelete = async () => {
     if (window.confirm('Are you sure you want to delete this answer?')) {
       try {
-        await deleteAnswer.mutateAsync(answer.id);
+        await deleteAnswer.mutateAsync(answer._id);
         toast({
           title: 'Answer deleted',
           description: 'Your answer has been removed',
@@ -80,7 +80,7 @@ export function AnswerCard({ answer, questionAuthorId }: AnswerCardProps) {
   
   const handleAccept = async () => {
     try {
-      await acceptAnswer.mutateAsync(answer.id);
+      await acceptAnswer.mutateAsync(answer._id);
       toast({
         title: 'Answer accepted',
         description: 'You have marked this as the accepted answer',

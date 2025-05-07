@@ -63,7 +63,7 @@ export default function AskPage() {
     defaultValues: {
       title: '',
       content: '',
-      tags: '',
+      tags: [],
     },
   });
   

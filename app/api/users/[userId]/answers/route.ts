@@ -1,14 +1,15 @@
+import { NextRequest, NextResponse } from 'next/server';
 import Answer from '@/models/Answer';
-import { NextResponse } from 'next/server';
 
 export async function GET(
-  request: Request,
-  { params }: { params: { userId: string } }
+  request: NextRequest,
+  context: { params: Promise<{ userId: string }> }
 ) {
   try {
+    const params = await context.params;
     const answers = await Answer.find({ author: params.userId })
-      .populate('question')
       .populate('author')
+      .populate('question')
       .sort({ createdAt: -1 });
 
     return NextResponse.json(answers);
