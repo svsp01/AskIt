@@ -11,6 +11,7 @@ import Link from 'next/link';
 import { Question } from '@/types/question';
 import questions from '@/data/questions.json';
 import answers from '@/data/answers.json';
+import { useGenerateAIResponse } from '@/queries/useAI';
 
 interface Message {
   id: string;
@@ -31,7 +32,7 @@ export default function AIChatPage() {
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState('');
   const [inputHeight, setInputHeight] = useState(60); // Initial height
-  const [isTyping, setIsTyping] = useState(false);
+  // const [isTyping, setIsTyping] = useState(false);
   const [suggestedQuestions, setSuggestedQuestions] = useState<SuggestedQuestion[]>([]);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
@@ -72,10 +73,12 @@ export default function AIChatPage() {
   };
   
   // Submit message
+  const { mutate: generateResponse, isPending:isAiLoading } = useGenerateAIResponse();
+
+  // Update handleSubmit
   const handleSubmit = () => {
     if (!input.trim()) return;
     
-    // Add user message
     const userMessage: Message = {
       id: `user-${Date.now()}`,
       content: input.trim(),
@@ -83,7 +86,6 @@ export default function AIChatPage() {
       timestamp: new Date()
     };
     
-    // Add AI message with loading state
     const aiMessage: Message = {
       id: `ai-${Date.now()}`,
       content: '',
@@ -94,29 +96,105 @@ export default function AIChatPage() {
     
     setMessages(prev => [...prev, userMessage, aiMessage]);
     setInput('');
-    setInputHeight(60); // Reset height
+    setInputHeight(60);
+    // setIsTyping(true);
     
-    // Simulate AI thinking
-    setIsTyping(true);
-    
-    // Find a matching question or generate a response
-    setTimeout(() => {
-      const aiResponse = generateAIResponse(input.trim());
-      const newSuggestions = getRandomQuestions(3);
-      
-      setMessages(prev => 
-        prev.map(msg => 
-          msg.id === aiMessage.id 
-            ? { ...msg, content: aiResponse, status: 'complete' } 
-            : msg
-        )
-      );
-      
-      setSuggestedQuestions(newSuggestions);
-      setIsTyping(false);
-    }, 1500);
+    generateResponse(input.trim(), {
+      onSuccess: (data) => {
+        setMessages(prev => 
+          prev.map(msg => 
+            msg.id === aiMessage.id 
+              ? { ...msg, content: data.content, status: 'complete' } 
+              : msg
+          )
+        );
+        
+        if (data.relatedQuestions) {
+          setSuggestedQuestions(data.relatedQuestions);
+        }
+      },
+      onError: () => {
+        setMessages(prev => 
+          prev.map(msg => 
+            msg.id === aiMessage.id 
+              ? { 
+                  ...msg, 
+                  content: 'Sorry, I encountered an error while processing your request.', 
+                  status: 'error' 
+                } 
+              : msg
+          )
+        );
+        toast({
+          title: "Error",
+          description: "Failed to generate AI response",
+          variant: "destructive"
+        });
+      },
+      onSettled: () => {
+        // setIsTyping(false);
+      }
+    });
   };
-  
+
+  // Update handleSuggestedQuestion
+  const handleSuggestedQuestion = (question: SuggestedQuestion) => {
+    const userMessage: Message = {
+      id: `user-${Date.now()}`,
+      content: question.title,
+      sender: 'user',
+      timestamp: new Date()
+    };
+    
+    const aiMessage: Message = {
+      id: `ai-${Date.now()}`,
+      content: '',
+      sender: 'ai',
+      timestamp: new Date(),
+      status: 'loading'
+    };
+    
+    setMessages(prev => [...prev, userMessage, aiMessage]);
+    // setIsTyping(true);
+    
+    generateResponse(question.title, {
+      onSuccess: (data) => {
+        setMessages(prev => 
+          prev.map(msg => 
+            msg.id === aiMessage.id 
+              ? { ...msg, content: data.content, status: 'complete' } 
+              : msg
+          )
+        );
+        
+        if (data.relatedQuestions) {
+          setSuggestedQuestions(data.relatedQuestions);
+        }
+      },
+      onError: () => {
+        setMessages(prev => 
+          prev.map(msg => 
+            msg.id === aiMessage.id 
+              ? { 
+                  ...msg, 
+                  content: 'Sorry, I encountered an error while processing your request.', 
+                  status: 'error' 
+                } 
+              : msg
+          )
+        );
+        toast({
+          title: "Error",
+          description: "Failed to generate AI response",
+          variant: "destructive"
+        });
+      },
+      onSettled: () => {
+        // setIsTyping(false);
+      }
+    });
+  };
+
   // Handle keyboard events
   const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
     if (e.key === 'Enter' && !e.shiftKey) {
@@ -184,74 +262,74 @@ Would you like me to help you create a new question for the community?`;
   };
   
   // Handle suggested question click
-  const handleSuggestedQuestion = (question: SuggestedQuestion) => {
-    const userMessage: Message = {
-      id: `user-${Date.now()}`,
-      content: question.title,
-      sender: 'user',
-      timestamp: new Date()
-    };
+//   const handleSuggestedQuestion = (question: SuggestedQuestion) => {
+//     const userMessage: Message = {
+//       id: `user-${Date.now()}`,
+//       content: question.title,
+//       sender: 'user',
+//       timestamp: new Date()
+//     };
     
-    // Add AI message with loading state
-    const aiMessage: Message = {
-      id: `ai-${Date.now()}`,
-      content: '',
-      sender: 'ai',
-      timestamp: new Date(),
-      status: 'loading'
-    };
+//     // Add AI message with loading state
+//     const aiMessage: Message = {
+//       id: `ai-${Date.now()}`,
+//       content: '',
+//       sender: 'ai',
+//       timestamp: new Date(),
+//       status: 'loading'
+//     };
     
-    setMessages(prev => [...prev, userMessage, aiMessage]);
+//     setMessages(prev => [...prev, userMessage, aiMessage]);
     
-    // Simulate AI thinking
-    setIsTyping(true);
+//     // Simulate AI thinking
+//     setIsTyping(true);
     
-    // Find the question and generate a response
-    setTimeout(() => {
-      const foundQuestion = questions.find(q => q.id === question.id);
-      let aiResponse = `I couldn't find that question in our database.`;
+//     // Find the question and generate a response
+//     setTimeout(() => {
+//       const foundQuestion = questions.find(q => q.id === question.id);
+//       let aiResponse = `I couldn't find that question in our database.`;
       
-      if (foundQuestion) {
-        // Get answers for this question
-        const questionAnswers = answers.filter(a => a.questionId === foundQuestion.id);
+//       if (foundQuestion) {
+//         // Get answers for this question
+//         const questionAnswers = answers.filter(a => a.questionId === foundQuestion.id);
         
-        if (questionAnswers.length > 0) {
-          // Find the accepted or highest voted answer
-          const bestAnswer = questionAnswers.find(a => a.isAccepted) || 
-            questionAnswers.sort((a, b) => b.voteCount - a.voteCount)[0];
+//         if (questionAnswers.length > 0) {
+//           // Find the accepted or highest voted answer
+//           const bestAnswer = questionAnswers.find(a => a.isAccepted) || 
+//             questionAnswers.sort((a, b) => b.voteCount - a.voteCount)[0];
           
-          aiResponse = `Here's information about that question:
+//           aiResponse = `Here's information about that question:
 
-"${foundQuestion.title}"
+// "${foundQuestion.title}"
 
-${bestAnswer.content}
+// ${bestAnswer.content}
 
-You can view the full question and more answers here: [${foundQuestion.title}](/q/${foundQuestion.id})`;
-        } else {
-          aiResponse = `Here's information about that question:
+// You can view the full question and more answers here: [${foundQuestion.title}](/q/${foundQuestion.id})`;
+//         } else {
+//           aiResponse = `Here's information about that question:
 
-"${foundQuestion.title}"
+// "${foundQuestion.title}"
 
-${foundQuestion.content}
+// ${foundQuestion.content}
 
-This question doesn't have any answers yet. You can view the question here: [${foundQuestion.title}](/q/${foundQuestion.id})`;
-        }
-      }
+// This question doesn't have any answers yet. You can view the question here: [${foundQuestion.title}](/q/${foundQuestion.id})`;
+//         }
+//       }
       
-      const newSuggestions = getRandomQuestions(3);
+//       const newSuggestions = getRandomQuestions(3);
       
-      setMessages(prev => 
-        prev.map(msg => 
-          msg.id === aiMessage.id 
-            ? { ...msg, content: aiResponse, status: 'complete' } 
-            : msg
-        )
-      );
+//       setMessages(prev => 
+//         prev.map(msg => 
+//           msg.id === aiMessage.id 
+//             ? { ...msg, content: aiResponse, status: 'complete' } 
+//             : msg
+//         )
+//       );
       
-      setSuggestedQuestions(newSuggestions);
-      setIsTyping(false);
-    }, 1000);
-  };
+//       setSuggestedQuestions(newSuggestions);
+//       setIsTyping(false);
+//     }, 1000);
+//   };
   
   return (
     <div className="container mx-auto py-8">
@@ -361,13 +439,13 @@ This question doesn't have any answers yet. You can view the question here: [${f
                   placeholder="Ask a question..."
                   className="pr-12 resize-none"
                   style={{ height: `${inputHeight}px` }}
-                  disabled={isTyping}
+                  disabled={isAiLoading}
                 />
                 <Button
                   size="icon"
                   className="absolute right-2 bottom-2"
                   onClick={handleSubmit}
-                  disabled={!input.trim() || isTyping}
+                  disabled={!input.trim() || isAiLoading}
                 >
                   <Send className="h-4 w-4" />
                   <span className="sr-only">Send</span>
